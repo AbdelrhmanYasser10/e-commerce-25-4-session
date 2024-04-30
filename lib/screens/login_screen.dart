@@ -1,8 +1,11 @@
+import 'package:e_commerce_app_session/screens/sign_up_screen.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
 import 'package:e_commerce_app_session/utils/widgets/my_text_form_field/my_text_form_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/widgets/app_button/app_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     super.dispose();
     _emailController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -54,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 MyTextFormField(
                   controller: _passwordController,
                   title: "Password:",
+                  isPassword:true,
                   validator: (value) {
                     return null;
                   },
@@ -61,40 +66,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 50.0,
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: double.infinity,
-                    height: 55.0,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [
-                        AppColors.primaryColor,
-                        AppColors.secondColor,
-                      ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Login",
-                        style: AppTextStyle.font18WhiteTextStyle(),
-                      ),
-                    ),
-                  ),
+                AppButton(
+                  fn: (){},
+                  text: "Login",
                 ),
                 verticalSpace(),
                 Text.rich(
                   TextSpan(
-                    text: "Don't have an account? ",
-                    style: AppTextStyle.font18GeryTextStyle(),
-                    children: [
-                      TextSpan(
-                        text: "Sign Up",
-                        style: AppTextStyle.font18OrangeTextStyle(),
-                        recognizer:TapGestureRecognizer()..onTap = () => print('Tap Here onTap'),
-                      ),
-                    ]
-
-                  ),
+                      text: "Don't have an account? ",
+                      style: AppTextStyle.font18GeryTextStyle(),
+                      children: [
+                        TextSpan(
+                          text: "Sign Up",
+                          style: AppTextStyle.font18OrangeTextStyle(),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const SignUpScreen(),
+                                  ),
+                                ),
+                        ),
+                      ]),
                 ),
               ],
             ),
