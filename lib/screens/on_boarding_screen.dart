@@ -1,4 +1,4 @@
-import 'package:e_commerce_app_session/models/login_screen.dart';
+import 'package:e_commerce_app_session/screens/login_screen.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

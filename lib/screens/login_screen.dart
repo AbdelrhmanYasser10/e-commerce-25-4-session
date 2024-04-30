@@ -1,7 +1,6 @@
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
 import 'package:e_commerce_app_session/utils/widgets/my_text_form_field/my_text_form_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
