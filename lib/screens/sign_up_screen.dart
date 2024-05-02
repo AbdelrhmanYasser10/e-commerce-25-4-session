@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:e_commerce_app_session/cubits/app_cubit/app_cubit.dart';
 import 'package:e_commerce_app_session/cubits/auth_cubit/auth_cubit.dart';
 import 'package:e_commerce_app_session/screens/login_screen.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../layout/main_layout.dart';
+import '../network/local/cache_helper.dart';
 import '../utils/functions/snack_bar/snack_bar.dart';
 import '../utils/text_styles/text_styles.dart';
 import '../utils/widgets/app_button/app_button.dart';
@@ -60,6 +63,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     context: context,
                     contentType: ContentType.success,
                   );
+                  CacheHelper.saveData(key: "token", value: state.responseModel.data!.token).then((value) {
+                    AppCubit.get(context).token = state.responseModel.data!.token;
+                    AppCubit.get(context).getUserData();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainLayout()));
+                  });
                 }
               },
               builder: (context, state) {

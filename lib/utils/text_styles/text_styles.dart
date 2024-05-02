@@ -50,6 +50,15 @@ abstract class AppTextStyle{
       ),
     );
   }
+  static TextStyle font25WhiteTextStyle(){
+    return GoogleFonts.oxygen(
+      textStyle: const TextStyle(
+        fontSize: 25.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
   static TextStyle font32BlackTextStyle(){
     return GoogleFonts.oxygen(
       textStyle: const TextStyle(

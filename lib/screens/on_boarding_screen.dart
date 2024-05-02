@@ -1,9 +1,11 @@
+import 'package:e_commerce_app_session/network/local/cache_helper.dart';
 import 'package:e_commerce_app_session/screens/login_screen.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../models/on_boarding_model.dart';
@@ -92,12 +94,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
                             );
                           }else{
-                            // navigate to home
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (_)=>const LoginScreen()),
-                                    (route) => false,
-                            );
+                            CacheHelper.saveData(key: "onBoardingPass", value: true).then((value) {
+                              if(value){
+                                // navigate to home
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (_)=>const LoginScreen()),
+                                      (route) => false,
+                                );
+                              }
+                            });
                           }
                         },
                         child: Container(

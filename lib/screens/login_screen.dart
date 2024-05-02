@@ -1,5 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:e_commerce_app_session/cubits/app_cubit/app_cubit.dart';
 import 'package:e_commerce_app_session/cubits/auth_cubit/auth_cubit.dart';
+import 'package:e_commerce_app_session/layout/main_layout.dart';
+import 'package:e_commerce_app_session/network/local/cache_helper.dart';
 import 'package:e_commerce_app_session/screens/sign_up_screen.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
@@ -49,6 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
             context: context,
             contentType: ContentType.success,
           );
+          CacheHelper.saveData(key: "token", value: state.model.data!.token).then((value) {
+            AppCubit.get(context).token = state.model.data!.token;
+            AppCubit.get(context).getUserData();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainLayout()));
+          });
+
         }
       },
       builder: (context, state) {

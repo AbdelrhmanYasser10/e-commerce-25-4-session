@@ -18,7 +18,13 @@ class DioHelper{
   static Future<Response> getData({
     required String endPoint,
     Map<String,dynamic>? queryParameters,
+    String? token,
+    Map<String,dynamic>? headers,
   })async{
+    _dio.options.headers = headers;
+    _dio.options.headers = {
+      "Authorization":token,
+    };
     return await _dio.get(endPoint,queryParameters: queryParameters);
   }
 
@@ -27,8 +33,12 @@ class DioHelper{
     Map<String,dynamic>? data,
     Map<String,dynamic>? queryParameters,
     Map<String,dynamic>? headers,
+    String? token,
   })async{
     _dio.options.headers = headers;
+    _dio.options.headers = {
+      "Authorization":token,
+    };
     return await _dio.post(endPoint,data: data,queryParameters: queryParameters);
   }
 }
