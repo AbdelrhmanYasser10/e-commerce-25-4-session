@@ -1,10 +1,14 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:e_commerce_app_session/cubits/auth_cubit/auth_cubit.dart';
 import 'package:e_commerce_app_session/screens/sign_up_screen.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
 import 'package:e_commerce_app_session/utils/widgets/my_text_form_field/my_text_form_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../utils/functions/snack_bar/snack_bar.dart';
 import '../utils/widgets/app_button/app_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,76 +32,115 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                  child: Text(
-                    "Login",
-                    style: AppTextStyle.font45OrangeTextStyle(),
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if(state is LoginError){
+          showSnackBar(
+            title: "Login Error",
+            message: state.message,
+            context: context,
+            contentType: ContentType.failure,
+          );
+        }
+        else if (state is LoginSuccessfully){
+          showSnackBar(
+            title: "Login Successfully",
+            message: state.model.message!,
+            context: context,
+            contentType: ContentType.success,
+          );
+        }
+      },
+      builder: (context, state) {
+        var cubit = AuthCubit.get(context);
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          "Login",
+                          style: AppTextStyle.font45OrangeTextStyle(),
+                        ),
+                      ),
+                      verticalSpace(),
+                      MyTextFormField(
+                        controller: _emailController,
+                        title: "Email:",
+                        validator: (value) {
+                          RegExp reg = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                          if (!reg.hasMatch(value!)) {
+                            return "Invaild Email";
+                          }
+                          return null;
+                        },
+                      ),
+                      verticalSpace(),
+                      MyTextFormField(
+                        controller: _passwordController,
+                        title: "Password:",
+                        isPassword: true,
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 50.0,
+                      ),
+                      state is LoginLoading ? const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryColor,
+                        ),
+                      ):AppButton(
+                        fn: () {
+                          if(_formKey.currentState!.validate()){
+                            cubit.login(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                            );
+                          }
+                        },
+                        text: "Login",
+                      ),
+                      verticalSpace(),
+                      Text.rich(
+                        TextSpan(
+                            text: "Don't have an account? ",
+                            style: AppTextStyle.font18GeryTextStyle(),
+                            children: [
+                              TextSpan(
+                                text: "Sign Up",
+                                style: AppTextStyle.font18OrangeTextStyle(),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () =>
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const SignUpScreen(),
+                                        ),
+                                      ),
+                              ),
+                            ]),
+                      ),
+                    ],
                   ),
                 ),
-                verticalSpace(),
-                MyTextFormField(
-                  controller: _emailController,
-                  title: "Email:",
-                  validator: (value) {
-                    RegExp reg = RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                    if (!reg.hasMatch(value!)) {
-                      return "Invaild Email";
-                    }
-                    return null;
-                  },
-                ),
-                verticalSpace(),
-                MyTextFormField(
-                  controller: _passwordController,
-                  title: "Password:",
-                  isPassword:true,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 50.0,
-                ),
-                AppButton(
-                  fn: (){},
-                  text: "Login",
-                ),
-                verticalSpace(),
-                Text.rich(
-                  TextSpan(
-                      text: "Don't have an account? ",
-                      style: AppTextStyle.font18GeryTextStyle(),
-                      children: [
-                        TextSpan(
-                          text: "Sign Up",
-                          style: AppTextStyle.font18OrangeTextStyle(),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const SignUpScreen(),
-                                  ),
-                                ),
-                        ),
-                      ]),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  SizedBox verticalSpace() => const SizedBox(
+  SizedBox verticalSpace() =>
+      const SizedBox(
         height: 20.0,
       );
 }

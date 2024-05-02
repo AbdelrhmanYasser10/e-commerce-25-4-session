@@ -26,7 +26,9 @@ class DioHelper{
     required String endPoint,
     Map<String,dynamic>? data,
     Map<String,dynamic>? queryParameters,
+    Map<String,dynamic>? headers,
   })async{
+    _dio.options.headers = headers;
     return await _dio.post(endPoint,data: data,queryParameters: queryParameters);
   }
 }

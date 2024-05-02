@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_app_session/models/login_response_model.dart';
 import 'package:e_commerce_app_session/models/regestration_response_model.dart';
 import 'package:e_commerce_app_session/network/remote/constants.dart';
 import 'package:e_commerce_app_session/network/remote/dio_helper.dart';
@@ -37,5 +38,32 @@ class AuthCubit extends Cubit<AuthState> {
     }).catchError((error){
       emit(RegestrationError(message: error.toString()));
     });
+  }
+
+  void login({
+  required String email,
+    required String password,
+}){
+    emit(LoginLoading());
+    DioHelper.postData(
+        endPoint: LOGIN,
+      headers: {
+          "lang":"en"
+      },
+      data: {
+          "email":email,
+          "password":password,
+      },
+    ).then((value){
+      if(value.data["status"]){
+        emit(LoginSuccessfully(model: LoginResponseModel.fromJson(value.data)));
+      }
+      else{
+        emit(LoginError(message: value.data["message"]));
+      }
+    }).catchError((error){
+      emit(LoginError(message: error.toString()));
+    });
+
   }
 }
