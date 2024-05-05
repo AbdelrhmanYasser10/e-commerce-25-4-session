@@ -67,6 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppCubit.get(context).token = state.responseModel.data!.token;
                     AppCubit.get(context).getUserData();
                     AppCubit.get(context).getHomeData();
+                    AppCubit.get(context).getCategoryData();
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainLayout()));
                   });
                 }

@@ -22,3 +22,21 @@ class GetHomeDataError extends AppState {
   final String message;
   GetHomeDataError({required this.message});
 }
+
+class GetCategoriesLoading extends AppState {}
+
+class GetCategoriesSuccessfully extends AppState {}
+
+class GetCategoriesError extends AppState {
+  final String message;
+  GetCategoriesError({required this.message});
+}
+
+class GetProductsLoading extends AppState {}
+
+class GetProductsSuccessfully extends AppState {}
+
+class GetProductsError extends AppState {
+  final String message;
+  GetProductsError({required this.message});
+}

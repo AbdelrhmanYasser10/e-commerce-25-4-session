@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_app_session/models/categories_model.dart';
 import 'package:e_commerce_app_session/models/home_model.dart';
+import 'package:e_commerce_app_session/models/prodcuts_model.dart';
 import 'package:e_commerce_app_session/models/user_data_model.dart';
 import 'package:e_commerce_app_session/network/local/cache_helper.dart';
 import 'package:e_commerce_app_session/network/remote/constants.dart';
@@ -17,6 +19,8 @@ class AppCubit extends Cubit<AppState> {
   String? token;
   UserDataModel? user;
   HomeModel? homeModel;
+  Categories? categories;
+  ProductsModel? products;
 
   void getUserData(){
 
@@ -61,6 +65,48 @@ class AppCubit extends Cubit<AppState> {
       }
     }).catchError((error){
         emit(GetHomeDataError(message: error.toString()));
+    });
+  }
+
+  void getCategoryData(){
+    emit(GetCategoriesLoading());
+    DioHelper.getData(
+      endPoint: CATEGORIES,
+      headers: {
+        "lang":"en",
+      },
+      token: token,
+    ).then((value){
+      categories = Categories.fromJson(value.data);
+      if(categories!.status!){
+        emit(GetCategoriesSuccessfully());
+      }
+      else{
+        emit(GetCategoriesError(message: categories!.message!));
+      }
+    }).catchError((error){
+      emit(GetCategoriesError(message: error.toString()));
+    });
+  }
+
+  void getAllProductsFromCategory({required int categoryId}){
+    emit(GetProductsLoading());
+    DioHelper.getData(
+      endPoint: PRODUCTS,
+      headers: {
+        "lang":"en",
+      },
+      token: token,
+    ).then((value){
+      if(value.data["status"]){
+        products = ProductsModel.fromJson(value.data["data"]);
+        emit(GetProductsSuccessfully());
+      }
+      else{
+        emit(GetProductsError(message: value.data["message"]));
+      }
+    }).catchError((error){
+      emit(GetProductsError(message: error.toString()));
     });
   }
 }

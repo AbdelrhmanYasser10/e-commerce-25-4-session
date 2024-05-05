@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_app_session/cubits/app_cubit/app_cubit.dart';
-import 'package:e_commerce_app_session/screens/products_screen.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CategoryScreen extends StatelessWidget {
-  const CategoryScreen({super.key});
+class ProductsScreen extends StatelessWidget {
+  final String title;
+  const ProductsScreen({super.key,required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CategoryScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          "Our Categories",
+          title,
           style: AppTextStyle.font24BlackTextStyle(),
         ),
         centerTitle: true,
@@ -25,14 +25,14 @@ class CategoryScreen extends StatelessWidget {
       body: BlocConsumer<AppCubit, AppState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if(state is GetCategoriesLoading){
+          if(state is GetProductsLoading){
             return const Center(
               child: CircularProgressIndicator(
                 color: AppColors.primaryColor,
               ),
             );
           }
-          else if(state is GetCategoriesError){
+          else if(state is GetProductsError){
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -46,7 +46,7 @@ class CategoryScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        AppCubit.get(context).getCategoryData();
+                        /*AppCubit.get(context).products();*/
                       },
                       child: const Text(
                         "Reload",
@@ -65,19 +65,18 @@ class CategoryScreen extends StatelessWidget {
               mainAxisSpacing: 10,
             ),
 
-            itemCount: cubit.categories!.data!.data!.length,
+            itemCount: cubit.products!.data!.length,
             itemBuilder: (context, index) {
-              var cateogry = cubit.categories!.data!.data!;
+              var product = cubit.products!.data![index];
               return GestureDetector(
                 onTap: (){
-                  AppCubit.get(context).getAllProductsFromCategory(categoryId: cateogry[index].id!);
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductsScreen(title: cateogry[index].name!)));
+                  /*AppCubit.get(context).getAllProductsFromCategory(categoryId: cateogry[index].id!);*/
                 },
                 child: Column(
                   children: [
                     Expanded(
                       child: CachedNetworkImage(
-                        imageUrl: cateogry[index].image!,
+                        imageUrl: product.images![0],
                         width: double.infinity,
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
@@ -88,15 +87,15 @@ class CategoryScreen extends StatelessWidget {
                           ),
                         ),
                         placeholder: (context, url) =>
-                            const LinearProgressIndicator(
+                        const LinearProgressIndicator(
                           color: AppColors.primaryColor,
                         ),
                         errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                        const Icon(Icons.error),
                       ),
                     ),
                     Text(
-                      cateogry[index].name!,
+                      product.name!,
                       maxLines: 1,
                       style: AppTextStyle.font18BlackTextStyle(),
                       textAlign: TextAlign.center,

@@ -22,9 +22,7 @@ class DioHelper{
     Map<String,dynamic>? headers,
   })async{
     _dio.options.headers = headers;
-    _dio.options.headers = {
-      "Authorization":token,
-    };
+    _dio.options.headers["Authorization"] = token;
     return await _dio.get(endPoint,queryParameters: queryParameters);
   }
 
@@ -36,9 +34,8 @@ class DioHelper{
     String? token,
   })async{
     _dio.options.headers = headers;
-    _dio.options.headers = {
-      "Authorization":token,
-    };
+    _dio.options.headers["Authorization"] = token;
+
     return await _dio.post(endPoint,data: data,queryParameters: queryParameters);
   }
 }

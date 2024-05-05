@@ -7,3 +7,8 @@ const REGISTER = "register";
 const PROFILE = "profile";
 
 const HOME = "home";
+
+const CATEGORIES = "categories";
+
+
+const PRODUCTS = "products";

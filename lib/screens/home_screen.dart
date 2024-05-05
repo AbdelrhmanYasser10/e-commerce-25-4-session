@@ -5,9 +5,7 @@ import 'package:e_commerce_app_session/cubits/app_cubit/app_cubit.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/functions/snack_bar/snack_bar.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -32,7 +30,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is GetHomeDataLoading) {
             return const Center(
-              child: CircularProgressIndicator(
+              child: LinearProgressIndicator(
                 color: AppColors.primaryColor,
               ),
             );
@@ -84,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       placeholder: (context, url) =>
-                          const CircularProgressIndicator(
+                          const LinearProgressIndicator(
                         color: AppColors.primaryColor,
                       ),
                       errorWidget: (context, url, error) => const Icon(Icons.error),

@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if(passOnBoarding != null) {
           if (appState is GetUserDataSuccessfully) {
             AppCubit.get(context).getHomeData();
+            AppCubit.get(context).getCategoryData();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

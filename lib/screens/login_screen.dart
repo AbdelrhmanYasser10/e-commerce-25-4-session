@@ -56,6 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
             AppCubit.get(context).token = state.model.data!.token;
             AppCubit.get(context).getUserData();
             AppCubit.get(context).getHomeData();
+            AppCubit.get(context).getCategoryData();
+
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainLayout()));
           });
 
