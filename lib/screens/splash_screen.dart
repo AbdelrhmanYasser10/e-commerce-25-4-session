@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         bool? passOnBoarding = CacheHelper.getData(key: "onBoardingPass");
         if(passOnBoarding != null) {
           if (appState is GetUserDataSuccessfully) {
+            AppCubit.get(context).getHomeData();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

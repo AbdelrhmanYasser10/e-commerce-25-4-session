@@ -41,6 +41,43 @@ abstract class AppTextStyle{
       ),
     );
   }
+  static TextStyle font18BlackTextStyle(){
+    return GoogleFonts.oxygen(
+      textStyle: const TextStyle(
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    );
+  }
+  static TextStyle font12OrangeTextStyle(){
+    return GoogleFonts.oxygen(
+      textStyle: const TextStyle(
+        fontSize: 12.0,
+        fontWeight: FontWeight.bold,
+        color: AppColors.secondColor,
+      ),
+    );
+  }
+  static TextStyle font12WhiteTextStyle(){
+    return GoogleFonts.oxygen(
+      textStyle: const TextStyle(
+        fontSize: 12.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
+  static TextStyle font10BlackTextStyleDisabled(){
+    return GoogleFonts.oxygen(
+      textStyle: const TextStyle(
+        fontSize: 10.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        decoration: TextDecoration.lineThrough,
+      ),
+    );
+  }
   static TextStyle font18WhiteTextStyle(){
     return GoogleFonts.oxygen(
       textStyle: const TextStyle(

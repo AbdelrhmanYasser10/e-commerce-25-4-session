@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_app_session/models/home_model.dart';
 import 'package:e_commerce_app_session/models/user_data_model.dart';
 import 'package:e_commerce_app_session/network/local/cache_helper.dart';
 import 'package:e_commerce_app_session/network/remote/constants.dart';
@@ -15,6 +16,8 @@ class AppCubit extends Cubit<AppState> {
 
   String? token;
   UserDataModel? user;
+  HomeModel? homeModel;
+
   void getUserData(){
 
     emit(GetUserDataLoading());
@@ -38,5 +41,26 @@ class AppCubit extends Cubit<AppState> {
         emit(GetUserDataError(message: error.toString()));
     });
 
+  }
+
+  void getHomeData(){
+    emit(GetHomeDataLoading());
+    DioHelper.getData(
+      endPoint: HOME,
+      headers: {
+        "lang":"en",
+      },
+      token: token,
+    ).then((value){
+      homeModel = HomeModel.fromJson(value.data);
+      if(homeModel!.status!){
+        emit(GetHomeDataSuccessfully());
+      }
+      else{
+        emit(GetHomeDataError(message: homeModel!.message!));
+      }
+    }).catchError((error){
+        emit(GetHomeDataError(message: error.toString()));
+    });
   }
 }

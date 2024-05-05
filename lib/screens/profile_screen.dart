@@ -39,76 +39,78 @@ class ProfileScreen extends StatelessWidget {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: CircleAvatar(
-                      radius: 65,
-                      backgroundColor: AppColors.primaryColor,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
                       child: CircleAvatar(
-                        radius: 62,
-                        backgroundImage: NetworkImage(
-                          user.data!.image!,
+                        radius: 65,
+                        backgroundColor: AppColors.primaryColor,
+                        child: CircleAvatar(
+                          radius: 62,
+                          backgroundImage: NetworkImage(
+                            user.data!.image!,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  userDataFields(
-                    title: "Email",
-                    value: user.data!.email!,
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  userDataFields(
-                    title: "Username",
-                    value: user.data!.name!,
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  userDataFields(
-                    title: "Phone",
-                    value: user.data!.phone!,
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: AppButton(
-                            text: "Edit data",
-                            fn: (){},
-                          ),
-                      ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      Expanded(
-                          child: AppButton(
-                            text: "Logout",
-                            fn: (){
-                              CacheHelper.removeData(key: "token").then((value){
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) {
-                                          return const LoginScreen();
-                                        },
-                                    )
-                                  ,);
-                              });
-                            },
-                          ),
-                      ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    userDataFields(
+                      title: "Email",
+                      value: user.data!.email!,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    userDataFields(
+                      title: "Username",
+                      value: user.data!.name!,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    userDataFields(
+                      title: "Phone",
+                      value: user.data!.phone!,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: AppButton(
+                              text: "Edit data",
+                              fn: (){},
+                            ),
+                        ),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                        Expanded(
+                            child: AppButton(
+                              text: "Logout",
+                              fn: (){
+                                CacheHelper.removeData(key: "token").then((value){
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) {
+                                            return const LoginScreen();
+                                          },
+                                      )
+                                    ,);
+                                });
+                              },
+                            ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );

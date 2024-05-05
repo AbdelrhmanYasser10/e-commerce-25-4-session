@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           CacheHelper.saveData(key: "token", value: state.model.data!.token).then((value) {
             AppCubit.get(context).token = state.model.data!.token;
             AppCubit.get(context).getUserData();
+            AppCubit.get(context).getHomeData();
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainLayout()));
           });
 

@@ -66,6 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   CacheHelper.saveData(key: "token", value: state.responseModel.data!.token).then((value) {
                     AppCubit.get(context).token = state.responseModel.data!.token;
                     AppCubit.get(context).getUserData();
+                    AppCubit.get(context).getHomeData();
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainLayout()));
                   });
                 }
