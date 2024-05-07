@@ -47,3 +47,12 @@ class ChangeProductFavouritesError extends AppState {
 final String message;
 ChangeProductFavouritesError({required this.message});
 }
+
+class GetFavouritesLoading extends AppState {}
+
+class GetFavouritesSuccessfully extends AppState {}
+
+class GetFavouritesError extends AppState {
+final String message;
+GetFavouritesError({required this.message});
+}

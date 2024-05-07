@@ -9,6 +9,8 @@ import 'package:e_commerce_app_session/network/remote/dio_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../models/favourites_model.dart';
+
 part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
@@ -21,6 +23,8 @@ class AppCubit extends Cubit<AppState> {
   HomeModel? homeModel;
   Categories? categories;
   ProductsModel? products;
+  FavouritesModel? favModel;
+
 
   Map<int, bool> favouritesMap = {};
 
@@ -125,6 +129,7 @@ class AppCubit extends Cubit<AppState> {
           "lang": "en",
         }).then((value) {
       if (value.data["status"]) {
+        getAllFavourites();
         emit(ChangeProductFavouritesSuccessfully());
       } else {
         favouritesMap[productsId] = !favouritesMap[productsId]!;
@@ -133,6 +138,28 @@ class AppCubit extends Cubit<AppState> {
     }).catchError((error) {
       favouritesMap[productsId] = !favouritesMap[productsId]!;
       emit(ChangeProductFavouritesError(message: error.toString()));
+    });
+  }
+
+  void getAllFavourites(){
+    emit(GetFavouritesLoading());
+
+    DioHelper.getData(
+      endPoint: FAVOURITES,
+      token: token,
+      headers: {
+          "lang":"en",
+      }
+    ).then((value) {
+      favModel = FavouritesModel.fromJson(value.data);
+      if(favModel!.status!){
+        emit(GetFavouritesSuccessfully());
+      }
+      else{
+        emit(GetFavouritesError(message: favModel!.message!));
+      }
+    }).catchError((error){
+      emit(GetFavouritesError(message: error.toString()));
     });
   }
 }
