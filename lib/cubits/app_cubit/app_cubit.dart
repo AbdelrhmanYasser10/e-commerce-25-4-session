@@ -14,7 +14,7 @@ part 'app_state.dart';
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitial());
 
-  static AppCubit get(context)=>BlocProvider.of(context);
+  static AppCubit get(context) => BlocProvider.of(context);
 
   String? token;
   UserDataModel? user;
@@ -22,91 +22,117 @@ class AppCubit extends Cubit<AppState> {
   Categories? categories;
   ProductsModel? products;
 
-  void getUserData(){
+  Map<int, bool> favouritesMap = {};
 
+  void getUserData() {
     emit(GetUserDataLoading());
     token = CacheHelper.getData(key: "token");
-    DioHelper.getData(
-        endPoint: PROFILE,
-        token: token,
-        headers: {
-          "lang":"en",
-        }
-    ).then((value) {
-        if(value.data["status"]){
-          user = UserDataModel.fromJson(value.data);
-          emit(GetUserDataSuccessfully());
-
-        }else{
-          CacheHelper.removeData(key: "token");
-          emit(GetUserDataError(message: value.data["message"]));
-        }
-    }).catchError((error){
-        emit(GetUserDataError(message: error.toString()));
+    DioHelper.getData(endPoint: PROFILE, token: token, headers: {
+      "lang": "en",
+    }).then((value) {
+      if (value.data["status"]) {
+        user = UserDataModel.fromJson(value.data);
+        emit(GetUserDataSuccessfully());
+      } else {
+        CacheHelper.removeData(key: "token");
+        emit(GetUserDataError(message: value.data["message"]));
+      }
+    }).catchError((error) {
+      emit(GetUserDataError(message: error.toString()));
     });
-
   }
 
-  void getHomeData(){
+  void getHomeData() {
     emit(GetHomeDataLoading());
     DioHelper.getData(
       endPoint: HOME,
       headers: {
-        "lang":"en",
+        "lang": "en",
       },
       token: token,
-    ).then((value){
+    ).then((value) {
       homeModel = HomeModel.fromJson(value.data);
-      if(homeModel!.status!){
+      if (homeModel!.status!) {
+        for (var element in homeModel!.data!.products!) {
+          favouritesMap.addAll({
+            element.id!: element.inFavorites!,
+          });
+        }
         emit(GetHomeDataSuccessfully());
-      }
-      else{
+      } else {
         emit(GetHomeDataError(message: homeModel!.message!));
       }
-    }).catchError((error){
-        emit(GetHomeDataError(message: error.toString()));
+    }).catchError((error) {
+      emit(GetHomeDataError(message: error.toString()));
     });
   }
 
-  void getCategoryData(){
+  void getCategoryData() {
     emit(GetCategoriesLoading());
     DioHelper.getData(
       endPoint: CATEGORIES,
       headers: {
-        "lang":"en",
+        "lang": "en",
       },
       token: token,
-    ).then((value){
+    ).then((value) {
       categories = Categories.fromJson(value.data);
-      if(categories!.status!){
+      if (categories!.status!) {
         emit(GetCategoriesSuccessfully());
-      }
-      else{
+      } else {
         emit(GetCategoriesError(message: categories!.message!));
       }
-    }).catchError((error){
+    }).catchError((error) {
       emit(GetCategoriesError(message: error.toString()));
     });
   }
 
-  void getAllProductsFromCategory({required int categoryId}){
+  void getAllProductsFromCategory({required int categoryId}) {
     emit(GetProductsLoading());
     DioHelper.getData(
       endPoint: PRODUCTS,
       headers: {
-        "lang":"en",
+        "lang": "en",
       },
       token: token,
-    ).then((value){
-      if(value.data["status"]){
+    ).then((value) {
+      if (value.data["status"]) {
         products = ProductsModel.fromJson(value.data["data"]);
+        for (var element in products!.data!) {
+          favouritesMap.addAll({
+            element.id! : element.inFavorites!
+          });
+        }
         emit(GetProductsSuccessfully());
-      }
-      else{
+      } else {
         emit(GetProductsError(message: value.data["message"]));
       }
-    }).catchError((error){
+    }).catchError((error) {
       emit(GetProductsError(message: error.toString()));
+    });
+  }
+
+  void changeFavourite({required int productsId}) {
+    favouritesMap[productsId] = !favouritesMap[productsId]!;
+    emit(ChangeProductFavouritesSuccessfully());
+    DioHelper.postData(
+        endPoint: FAVOURITES,
+        data: {
+          "product_id": productsId,
+        },
+        token: token!,
+        headers: {
+          "lang": "en",
+        }).then((value) {
+      if (value.data["status"]) {
+        emit(ChangeProductFavouritesSuccessfully());
+      } else {
+        favouritesMap[productsId] = !favouritesMap[productsId]!;
+        emit(ChangeProductFavouritesError(message: value.data["message"]));
+      }
+    }).catchError((error) {
+      favouritesMap[productsId] = !favouritesMap[productsId]!;
+      emit(ChangeProductFavouritesError(message: error.toString()));
     });
   }
 }

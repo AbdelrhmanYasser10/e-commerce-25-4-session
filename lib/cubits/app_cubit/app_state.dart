@@ -40,3 +40,10 @@ class GetProductsError extends AppState {
   final String message;
   GetProductsError({required this.message});
 }
+
+class ChangeProductFavouritesSuccessfully extends AppState {}
+
+class ChangeProductFavouritesError extends AppState {
+final String message;
+ChangeProductFavouritesError({required this.message});
+}

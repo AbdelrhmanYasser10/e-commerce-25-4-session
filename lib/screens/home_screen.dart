@@ -5,6 +5,7 @@ import 'package:e_commerce_app_session/cubits/app_cubit/app_cubit.dart';
 import 'package:e_commerce_app_session/utils/colors/app_colors.dart';
 import 'package:e_commerce_app_session/utils/functions/snack_bar/snack_bar.dart';
 import 'package:e_commerce_app_session/utils/text_styles/text_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,9 +27,17 @@ class HomeScreen extends StatelessWidget {
               contentType: ContentType.failure,
             );
           }
+          if(state is ChangeProductFavouritesError){
+            showSnackBar(
+              context: context,
+              title: "Favourites error",
+              message: state.message,
+              contentType: ContentType.failure,
+            );
+          }
         },
         builder: (context, state) {
-          if (state is GetHomeDataLoading) {
+          if (state is GetHomeDataLoading || AppCubit.get(context).homeModel == null) {
             return const Center(
               child: LinearProgressIndicator(
                 color: AppColors.primaryColor,
@@ -204,6 +213,24 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ):const SizedBox(),
+                                  Positioned(
+                                    top: 0,
+                                    right: 5,
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: cubit.favouritesMap[products[index].id!]!? AppColors.primaryColor:Colors.grey.shade500,
+                                      child: IconButton(
+                                        onPressed: (){
+                                          cubit.changeFavourite(productsId: products[index].id!);
+                                        },
+                                        icon: const Icon(
+                                          Icons.favorite_outline,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

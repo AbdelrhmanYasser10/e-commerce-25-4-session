@@ -12,3 +12,6 @@ const CATEGORIES = "categories";
 
 
 const PRODUCTS = "products";
+
+
+const FAVOURITES = "favorites";

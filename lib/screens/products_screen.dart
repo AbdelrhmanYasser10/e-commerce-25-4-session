@@ -11,6 +11,8 @@ class ProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -75,23 +77,56 @@ class ProductsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Expanded(
-                      child: CachedNetworkImage(
-                        imageUrl: product.images![0],
-                        width: double.infinity,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
+                      child: Stack(
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: product.images![0],
+                            width: double.infinity,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            placeholder: (context, url) =>
+                            const LinearProgressIndicator(
+                              color: AppColors.primaryColor,
+                            ),
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                          ),
+                          product.discount != 0 ? Container(
+                            width: width * (1/2) * (1/4),
+                            height: height * 0.03,
+                            color: Colors.red,
+                            child: Center(
+                              child: Text(
+                                "${product.discount.toString()}%",
+                                style: AppTextStyle.font12WhiteTextStyle(),
+                              ),
+                            ),
+                          ):const SizedBox(),
+                          Positioned(
+                            top: 0,
+                            right: 5,
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: cubit.favouritesMap[product.id!]!? AppColors.primaryColor:Colors.grey.shade500,
+                              child: IconButton(
+                                onPressed: (){
+                                  cubit.changeFavourite(productsId: product.id!);
+                                },
+                                icon: const Icon(
+                                  Icons.favorite_outline,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                        placeholder: (context, url) =>
-                        const LinearProgressIndicator(
-                          color: AppColors.primaryColor,
-                        ),
-                        errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                        ],
                       ),
                     ),
                     Text(
